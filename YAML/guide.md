@@ -80,10 +80,11 @@ employees:
   - name: Jane
     role: Manager
 ```
-# 2. Advanced YAML Features
+# Advanced Features
 
-## 1. Anchors (&) and Aliases (*) — Reuse Code Without Rewriting
-YAML lets you reuse parts of your configuration to avoid repeating the same data again and again.To keep your YAML file DRY (Don’t Repeat Yourself). It makes it cleaner and easier to maintain.
+### 🔁 1. Anchors (&) and Aliases (*) — Reuse Code Without Rewriting
+
+YAML lets you **reuse parts of your configuration** to avoid repeating the same data again and again.
 
 ```yaml
 defaults: &default_settings
@@ -94,86 +95,115 @@ service1:
   <<: *default_settings
   host: example.com
 ```
-&default_settings: This creates a named block (anchor) called default_settings.
 
-*default_settings: This reuses that block wherever you want.
+- `&default_settings`: Creates an **anchor** named `default_settings`.
+- `*default_settings`: **References** the anchor.
+- `<<: *default_settings`: **Merges** the key-values into `service1`.
 
-<<: *default_settings: This merges the settings into service1.
+**Why use this?**  
+To keep your YAML DRY (**Don't Repeat Yourself**) and more maintainable.
 
-## 2. Multi-line Strings — Write Big Text Blocks
-If you need to add large texts (like logs, descriptions, or messages), YAML supports it using two ways:
+---
 
-a) Literal Style (|) – Keeps new lines
+### 🧾 2. Multi-line Strings — Write Big Text Blocks
+
+If you need to include logs, descriptions, or other long texts, YAML supports two styles:
+
+#### Literal Style (`|`) — Keeps New Lines
 ```yaml
 note: |
   This is a multiline
   string in literal style.
 ```
-b) Folded Style (>) – Joins lines with spaces
+Output keeps line breaks **as written**.
+
+#### Folded Style (`>`) — Joins Lines with Spaces
 ```yaml
 summary: >
   This is a folded
   style multiline string.
 ```
-Output becomes:
-This is a folded style multiline string.
+Output becomes: `This is a folded style multiline string.`
 
+**When to use:**
+- Use `|` when formatting matters (e.g., logs)
+- Use `>` for paragraphs or messages
 
-### 🧩 Complex Nesting Example
+---
+
+### 🧩 3. Complex/Nested Structures — Real-World Format
+
+YAML supports nested data like lists inside maps and vice versa.
+
 ```yaml
 services:
-  - name: frontend
-    image: nginx
+  - name: web
+    replicas: 2
     ports:
-      - 80
-  - name: backend
-    image: node
+      - containerPort: 80
+
+  - name: db
+    replicas: 1
     ports:
-      - 3000
+      - containerPort: 5432
 ```
+
+- `services` is a **list**.
+- Each item is a **map** with its own keys.
+- Inside each service, you can **nest deeper** (e.g., ports).
+
+**Use Case:** Common in Kubernetes, Docker Compose, and Ansible.
 
 ---
 
-## 🔃 3. Block vs Flow Style
+### 🧱 4. Block vs Flow Style — Two Ways to Write the Same Thing
 
-### Block Style (easy to read)
+#### Block Style (preferred):
 ```yaml
-fruits:
-  - apple
-  - banana
-  - orange
+colors:
+  - red
+  - green
+  - blue
+
+user:
+  name: Alice
+  age: 30
 ```
-### Flow Style (compact)
+
+#### Flow Style (compact):
 ```yaml
-fruits: [apple, banana, orange]
+colors: [red, green, blue]
+user: { name: "Alice", age: 30 }
 ```
+
+- Block style is easier to read.
+- Flow style is shorter, useful for small/inline data.
 
 ---
 
-### 📄 4. Multiple YAML Documents
+### 📄 5. Multiple YAML Documents in One File
 
-Useful in Kubernetes and CI/CD:
+You can include more than one YAML document in a single file using `---` to separate them.
 
 ```yaml
 # Document 1
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-service
+name: Document1
+value: 123
 
 # Document 2
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-deployment
+name: Document2
+value: 456
+...
 ```
 
-Use `---` to separate documents.
+- `---` starts a new document
+- `...` ends a document (optional)
+
+**Use Case:** Kubernetes multi-resource files, CI/CD workflows
 
 ---
-
 ## 🚀 5. Industry usage
 
 ### 🔧 Kubernetes
