@@ -1,4 +1,4 @@
-# Complete YAML Guide for DevOps Engineers
+# Complete YAML Guide
 
 YAML (YAML Ain’t Markup Language) is a human-readable data serialization format, designed to be easy to write and understand. It’s widely used for configuration files, data exchange, and is a staple in DevOps tooling (Kubernetes, Ansible, Docker Compose, CI/CD pipelines, etc.)
 
